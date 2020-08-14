@@ -14,6 +14,8 @@ import java.util.List;
 /**
  * @author Sophia Klocheva
  * on 7/31/2020
+ * <p>
+ * RepositoryRestController that adds custom to the deffault Spring Data REST path.
  */
 @RepositoryRestController
 public class DesignTacoSpringApi
