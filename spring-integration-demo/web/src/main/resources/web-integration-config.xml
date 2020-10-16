@@ -8,15 +8,28 @@
             http://www.springframework.org/schema/integration https://www.springframework.org/schema/integration/spring-integration.xsd
             http://www.springframework.org/schema/integration/amqp https://www.springframework.org/schema/integration/amqp/spring-integration-amqp.xsd">
 
+    <!-- Point-to-point channel to send registration messages from web layer to service layer -->
     <int:channel id="registrationRequest"/>
 
-    <!-- Transformer to convert the message payload from an AttendeeRegistration object to JSON -->
-    <int:object-to-json-transformer input-channel="registrationRequest" output-channel="toRabbit"/>
+    <!--    &lt;!&ndash; Service activator that calls the registration service whenever a message is sent to the channel &ndash;&gt;-->
+    <!--    <int:service-activator-->
+    <!--            input-channel="registrationRequest"-->
+    <!--            ref="registrationService"-->
+    <!--            method="register"/>-->
 
+    <!-- Transformer to convert the message payload from an AttendeeRegistration object to JSON -->
+    <int:object-to-json-transformer
+            input-channel="registrationRequest"
+            output-channel="toRabbit"/>
+
+    <!--    channel adapter-->
     <int:channel id="toRabbit"/>
 
     <!-- Outbound channel adapter which sends messages to RabbitMQ -->
     <!-- Spring Boot automatically provides 'rabbitTemplate' -->
-    <int-amqp:outbound-channel-adapter channel="toRabbit" amqp-template="rabbitTemplate" routing-key="globomantics.registrationRequest"/>
+    <int-amqp:outbound-channel-adapter
+            channel="toRabbit"
+            amqp-template="rabbitTemplate"
+            routing-key="registrationRequest"/>
 
 </beans>
