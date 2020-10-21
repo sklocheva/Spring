@@ -2,6 +2,7 @@ package com.pluralsight.demo.service;
 
 import com.pluralsight.demo.database.*;
 import com.pluralsight.demo.model.AttendeeRegistration;
+import com.pluralsight.demo.model.RegistrationEvent;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -44,8 +45,8 @@ public class RegistrationService
         this.ticketTypeRepository = ticketTypeRepository;
     }
 
-    @ServiceActivator(inputChannel = "registrationRequest")
-    public void register(
+//    @ServiceActivator(inputChannel = "registrationRequest")
+    public RegistrationEvent register(
             @Header("dateTime") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) OffsetDateTime dateTime,
             @Payload AttendeeRegistration registration)
 
@@ -65,6 +66,15 @@ public class RegistrationService
 
         attendeeTicketRepository.save(attendeeTicket);
         LOG.debug("Registration saved, ticket code: {}", attendeeTicket.getTicketCode());
+
+        RegistrationEvent event = new RegistrationEvent();
+        event.setTicketType(attendeeTicket.getTicketPrice().getTicketType().getCode());
+        event.setTicketPrice(attendeeTicket.getNetPrice());
+        event.setTicketCode(attendeeTicket.getTicketCode());
+        event.setAttendeeFirstName(attendee.getFirstName());
+        event.setAttendeeLastName(attendee.getLastName());
+        event.setAttendeeEmail(attendee.getEmail());
+        return event;
     }
 
     private Attendee createAttendee(AttendeeRegistration registration)
