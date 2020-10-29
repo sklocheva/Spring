@@ -7,10 +7,21 @@ package com.spring.demo.springintegrationswag.pattern.command.model;
 public class Swag
 {
     private String type;
+    private String amaunt;
 
     public Swag(String type)
     {
         this.type = type;
+    }
+
+    public String getAmaunt()
+    {
+        return amaunt;
+    }
+
+    public void setAmaunt(String amaunt)
+    {
+        this.amaunt = amaunt;
     }
 
     public String getType()
